@@ -3,7 +3,7 @@ dotenv.config();
 import mysql from 'mysql2/promise';
 
 
-export const pool = mysql.createPool({
+const pool = mysql.createPool({
 	host: process.env.DB_HOST,
 	port: Number(process.env.DB_PORT || 3306),
 	user: process.env.DB_USER,
@@ -11,3 +11,5 @@ export const pool = mysql.createPool({
 	database: process.env.DB_NAME,
 	ssl: { rejectUnauthorized: true },
 });
+
+export default pool;

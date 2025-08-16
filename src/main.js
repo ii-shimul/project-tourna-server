@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import { createUser, getUsers } from "./routes/users.js";
+import notFound from "./middlewares/notFound.js";
+import Error from "./middlewares/Error.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,6 +11,14 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Error handling middleware
+app.use(Error);
+
+// 404 handler
+app.use(notFound);
+
+
 
 // home route
 app.get("/", (req, res) => {
@@ -21,22 +31,6 @@ app.post("/users", createUser);
 // fetch all users
 app.get("/users", getUsers);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-	console.error(err.stack);
-	res.status(500).json({
-		success: false,
-		error: "Something went wrong!",
-	});
-});
-
-// 404 handler
-app.use((req, res) => {
-	res.status(404).json({
-		success: false,
-		error: "Route not found",
-	});
-});
 
 // Start server
 app.listen(PORT, () => {

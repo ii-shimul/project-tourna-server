@@ -12,14 +12,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Error handling middleware
-app.use(Error);
-
-// 404 handler
-app.use(notFound);
-
-
-
 // home route
 app.get("/", (req, res) => {
 	res.json({ message: "Welcome to the Express server!" });
@@ -31,6 +23,11 @@ app.post("/users", createUser);
 // fetch all users
 app.get("/users", getUsers);
 
+// Error handling middleware
+app.use(Error);
+
+// 404 handler
+app.use(notFound);
 
 // Start server
 app.listen(PORT, () => {

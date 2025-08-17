@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { createUser, getUsers } from "./routes/users.js";
+import { createUser, getUsers, userLogin } from "./routes/users.js";
 import notFound from "./middlewares/notFound.js";
 import Error from "./middlewares/Error.js";
 
@@ -17,10 +17,10 @@ app.get("/", (req, res) => {
 	res.json({ message: "Welcome to the Express server!" });
 });
 
-// create a new user
 app.post("/signup", createUser);
 
-// fetch all users
+app.post("/login", userLogin);
+
 app.get("/users", getUsers);
 
 // Error handling middleware

@@ -55,6 +55,43 @@ export async function createUser(req, res) {
 	}
 }
 
+export async function userLogin(req, res) {
+	try {
+		const { email, password } = req.body;
+
+		if (!email || !password) {
+			return res.status(400).json({
+				success: false,
+				error: "Email and password are required",
+			});
+		}
+
+		const [rows] = await pool.execute(
+			"SELECT password FROM users WHERE email = ?",
+			[email]
+		);
+		const hashedPassword = rows.length > 0 ? rows[0].password : null;
+		const isPasswordValid = await bcrypt.compare(password, hashedPassword);
+		if (isPasswordValid) {
+			return res.status(200).json({
+				success: true,
+				message: "Login successful",
+			});
+		} else {
+			return res.status(401).json({
+				success: false,
+				error: "Invalid credentials",
+			});
+		}
+	} catch (error) {
+		console.error("Error during login:", error);
+		res.status(500).json({
+			success: false,
+			error: "Failed to process login",
+		});
+	}
+}
+
 export async function getUsers(req, res) {
 	try {
 		const [rows] = await pool.execute("SELECT * FROM users");

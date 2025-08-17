@@ -1,21 +1,25 @@
-import pool from '../db.js';
+import pool from "../db.js";
+import bcrypt from "bcrypt";
 
 export async function createUser(req, res) {
 	try {
-		const { name, email } = req.body;
+		const { name, email, password } = req.body;
 
 		// Validate input
-		if (!name || !email) {
+		if (!name || !email || !password) {
 			return res.status(400).json({
 				success: false,
-				error: "Name and email are required",
+				error: "Name, email and password are required",
 			});
 		}
 
+		const saltRounds = 10;
+		const hashedPassword = await bcrypt.hash(password, saltRounds);
+
 		// Insert new user into database
 		const [result] = await pool.execute(
-			"INSERT INTO users (name, email) VALUES (?, ?)",
-			[name, email]
+			"INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+			[name, email, hashedPassword]
 		);
 
 		res.status(201).json({

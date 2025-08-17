@@ -16,6 +16,12 @@ export async function createUser(req, res) {
 		const saltRounds = 10;
 		const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+		console.log("Connection params:", {
+			host: process.env.DB_HOST,
+			port: process.env.DB_PORT,
+			database: process.env.DB_NAME,
+		});
+
 		// Insert new user into database
 		const [result] = await pool.execute(
 			"INSERT INTO users (name, email, password) VALUES (?, ?, ?)",

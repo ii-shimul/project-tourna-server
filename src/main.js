@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 });
 
 // create a new user
-app.post("/users", createUser);
+app.post("/signup", createUser);
 
 // fetch all users
 app.get("/users", getUsers);

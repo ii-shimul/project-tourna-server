@@ -32,9 +32,9 @@ export async function createUser(req, res) {
 			success: true,
 			message: "User created successfully",
 			data: {
-				id: result.insertId,
 				name,
 				email,
+				hashedPassword,
 			},
 		});
 	} catch (error) {
@@ -67,15 +67,22 @@ export async function userLogin(req, res) {
 		}
 
 		const [rows] = await pool.execute(
-			"SELECT password FROM users WHERE email = ?",
+			"SELECT name, password FROM users WHERE email = ?",
 			[email]
 		);
 		const hashedPassword = rows.length > 0 ? rows[0].password : null;
+
+		const name = rows.length > 0 ? rows[0].name : null;
 		const isPasswordValid = await bcrypt.compare(password, hashedPassword);
 		if (isPasswordValid) {
 			return res.status(200).json({
 				success: true,
 				message: "Login successful",
+				data: {
+					name,
+					email,
+					hashedPassword,
+				},
 			});
 		} else {
 			return res.status(401).json({

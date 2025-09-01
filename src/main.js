@@ -3,6 +3,7 @@ import cors from "cors";
 import { createUser, getUsers, userLogin } from "./routes/users.js";
 import notFound from "./middlewares/notFound.js";
 import Error from "./middlewares/Error.js";
+import { createTeam } from "./routes/teams.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +23,8 @@ app.post("/signup", createUser);
 app.post("/login", userLogin);
 
 app.get("/users", getUsers);
+
+app.post("/teams", createTeam);
 
 // Error handling middleware
 app.use(Error);

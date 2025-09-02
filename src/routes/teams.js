@@ -21,12 +21,31 @@ export async function createTeam(req, res) {
 			success: true,
 			message: "Team created successfully",
 		});
-		console.log(result);
 	} catch (error) {
 		console.error("Error creating team:", error);
 		res.status(500).json({
 			success: false,
 			error: `Failed to create team: ${error.code || error.message}`,
+		});
+	}
+}
+
+export async function getTeams(req, res) {
+	try {
+		const { user_id } = req.query;
+		const result = await pool.execute(
+			"SELECT * FROM teams WHERE owner_user_id = ?",
+			[user_id]
+		);
+		res.status(201).json({
+			success: true,
+			teams: result[0],
+		});
+	} catch (error) {
+		console.log("Error fetching teams:", error);
+		res.status(500).json({
+			success: false,
+			error: `Failed to fetch teams: ${error.code || error.message}`,
 		});
 	}
 }

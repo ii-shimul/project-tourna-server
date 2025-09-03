@@ -37,10 +37,10 @@ export async function createUser(req, res) {
         error: "Email already exists",
       });
     }
-
+		console.log(error);
     res.status(500).json({
       success: false,
-      error: "Failed to create user",
+      error: "Failed to create user, please try again later.",
     });
   }
 }
@@ -57,10 +57,10 @@ export async function userLogin(req, res) {
 		}
 
 		const [rows] = await pool.execute(
-			"SELECT name, password FROM users WHERE email = ?",
+			"SELECT name, password_hash FROM users WHERE email = ?",
 			[email]
 		);
-		const hashedPassword = rows.length > 0 ? rows[0].password : null;
+		const hashedPassword = rows.length > 0 ? rows[0].password_hash : null;
 
 		const name = rows.length > 0 ? rows[0].name : null;
 		const isPasswordValid = await bcrypt.compare(password, hashedPassword);
@@ -84,7 +84,7 @@ export async function userLogin(req, res) {
 		console.error("Error during login:", error);
 		res.status(500).json({
 			success: false,
-			error: "Failed to process login",
+			error: "Failed to process login, please try again later.",
 		});
 	}
 }

@@ -3,13 +3,17 @@ import cors from "cors";
 import { createUser, getUsers, userLogin } from "./routes/users.js";
 import notFound from "./middlewares/notFound.js";
 import Error from "./middlewares/Error.js";
-import { createTeam, getTeams } from "./routes/teams.js";
+import { createTeam, deleteTeam, getTeams } from "./routes/teams.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares
-app.use(cors());
+app.use(
+	cors({
+		origin: ["http://localhost:5173", "https://tourna-nine.vercel.app"],
+	})
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -27,6 +31,8 @@ app.get("/users", getUsers);
 app.post("/teams", createTeam);
 
 app.get("/teams", getTeams);
+
+app.delete("/teams/:id", deleteTeam);
 
 // Error handling middleware
 app.use(Error);

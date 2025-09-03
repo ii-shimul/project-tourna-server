@@ -13,7 +13,7 @@ export async function createTeam(req, res) {
 
 		const membersJSON = JSON.stringify(members);
 
-		const [result] = await pool.execute(
+		const result = await pool.execute(
 			"INSERT INTO teams (name, owner_user_id, members) VALUES (?, ?, ?)",
 			[name, owner_user_id, membersJSON]
 		);
@@ -46,6 +46,29 @@ export async function getTeams(req, res) {
 		res.status(500).json({
 			success: false,
 			error: `Failed to fetch teams: ${error.code || error.message}`,
+		});
+	}
+}
+
+export async function deleteTeam(req, res) {
+	try {
+		const { id } = req.params;
+		if (!id) {
+			return res.status(400).json({
+				success: false,
+				error: "Team id is required",
+			});
+		}
+		const result = await pool.execute("DELETE FROM teams WHERE id = ?", [id]);
+		res.status(201).json({
+			success: true,
+			message: "Team deleted",
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({
+			success: false,
+			error: `Failed to delete the team: ${error.code || error.message}`,
 		});
 	}
 }

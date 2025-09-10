@@ -7,7 +7,9 @@ import { createTeam, deleteTeam, getTeams } from "./routes/teams.js";
 import {
 	createTournament,
 	deleteTournament,
+	getTournamentById,
 	getTournaments,
+	updateTournament,
 } from "./routes/tournament.js";
 
 const app = express();
@@ -41,9 +43,13 @@ app.delete("/teams/:id", deleteTeam);
 
 app.get("/tournaments", getTournaments);
 
+app.get("/tournaments/:id", getTournamentById);
+
 app.post("/tournaments", createTournament);
 
 app.delete("/tournaments/:id", deleteTournament);
+
+app.patch("/tournaments/:id", updateTournament);
 
 // Error handling middleware
 app.use(Error);

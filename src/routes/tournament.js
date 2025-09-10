@@ -61,7 +61,27 @@ export async function createTournament(req, res) {
   }
 }
 
+export async function getTournamentById(req, res) {
+	try {
+		const { id } = req.params;
 
+		const tournament = await pool.execute(
+			"SELECT * FROM tournaments WHERE id = ?",
+			[id]
+		);
+
+		res.status(200).json({
+			success: true,
+			tournament: tournament[0],
+		});
+	} catch (error) {
+		console.error("Error fetching tournament:", error);
+		res.status(500).json({
+			success: false,
+			error: `Failed to fetch tournament: ${error.code || error.message}`,
+		});
+	}
+}
 
 export async function deleteTournament(req, res) {
 	try {

@@ -4,6 +4,11 @@ import { createUser, getUsers, userLogin } from "./routes/users.js";
 import notFound from "./middlewares/notFound.js";
 import Error from "./middlewares/Error.js";
 import { createTeam, deleteTeam, getTeams } from "./routes/teams.js";
+import {
+	createTournament,
+	deleteTournament,
+	getTournaments,
+} from "./routes/tournament.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,6 +38,12 @@ app.post("/teams", createTeam);
 app.get("/teams", getTeams);
 
 app.delete("/teams/:id", deleteTeam);
+
+app.get("/tournaments", getTournaments);
+
+app.post("/tournaments", createTournament);
+
+app.delete("/tournaments/:id", deleteTournament);
 
 // Error handling middleware
 app.use(Error);

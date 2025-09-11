@@ -2,7 +2,11 @@ import pool from "../db.js";
 
 export async function getTournaments(req, res) {
 	try {
-		const result = await pool.execute("SELECT * FROM tournaments");
+		const {userId} = req.query;
+		const result = await pool.execute(
+			"SELECT * FROM tournaments WHERE created_by = ?",
+			[userId]
+		);
 		res.status(200).json({
 			success: true,
 			tournaments: result[0],
@@ -20,7 +24,6 @@ export async function createTournament(req, res) {
 	try {
 		const { name, format, start_date, status, created_by, data_json } =
 			req.body;
-		console.log(name);
 		let dataJsonString;
 		if (data_json && typeof data_json === "object") {
 			dataJsonString = JSON.stringify(data_json);
